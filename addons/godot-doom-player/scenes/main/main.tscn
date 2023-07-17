@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://deopa7q3pt2wf"]
+
+[ext_resource type="Script" path="res://addons/godot-doom-player/scenes/main/main.gd" id="1_o4r0k"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_egllt"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o4r0k")
+
+[node name="DOOM" type="DOOM" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("ImageTexture_egllt")
+
+[connection signal="assets_imported" from="DOOM" to="." method="_on_doom_assets_imported"]
