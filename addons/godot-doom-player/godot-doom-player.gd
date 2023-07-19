@@ -1,18 +1,20 @@
 @tool
 extends EditorPlugin
 
-const MainPanel: = preload("res://addons/godot-doom-player/scenes/main/main.tscn")
+const MainPanelScene: = preload("res://addons/godot-doom-player/scenes/main/main.tscn")
+const MainPanel: = preload("res://addons/godot-doom-player/scenes/main/main.gd")
 
 const WAD_SETTING: = "DOOM/settings/wad/wad_path_%d"
 const DEFAULT_WAD_PATH: = "res://addons/godot-doom-player/resources/wad/DOOM1.WAD"
 const SOUNDFONT_SETTING: = "DOOM/settings/soundfont/soundfont_path"
 const DEFAULT_SOUNDFONT_PATH: = "res://addons/godot-doom-player/resources/sf3/MuseScore_General.sf3"
 
-var main_panel_instance
+var main_panel_instance: MainPanel
 
 
 func _enter_tree() -> void:
-	main_panel_instance = MainPanel.instantiate()
+	main_panel_instance = MainPanelScene.instantiate()
+	main_panel_instance.editor_interface = get_editor_interface()
 	get_editor_interface().get_editor_main_screen().add_child(main_panel_instance)
 	_make_visible(false)
 
