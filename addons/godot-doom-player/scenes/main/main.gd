@@ -60,12 +60,14 @@ func init_doom() -> void:
 
 	update_paths()
 	doom.import_assets()
+	doom.grab_focus()
 
 
 func kill_doom() -> void:
 	if editor_interface == null:
 		return
-	pass
+
+	doom.doom_enabled = false
 
 
 func _on_size_option_button_item_selected(index: int) -> void:
