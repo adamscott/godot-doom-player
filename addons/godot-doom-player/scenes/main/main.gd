@@ -6,6 +6,8 @@ var editor_interface: EditorInterface  # Set in godot-doom-player.gd
 
 @onready var doom: DOOM = %DOOM
 @onready var size_option_button: OptionButton = %SizeOptionButton
+@onready var mouse_accel_hslider: HSlider = %MouseAccelHSlider
+@onready var wasd_checkbox: CheckBox = %WASDCheckBox
 
 const DOOM_MIN_WIDTH: = 320
 const DOOM_MIN_HEIGHT: = 240
@@ -14,6 +16,7 @@ var assets_imported: = false
 
 func _ready() -> void:
 	doom.assets_imported.connect(_on_doom_assets_imported)
+	doom.mouse_acceleration = mouse_accel_hslider.value
 	update_paths()
 
 
@@ -76,3 +79,37 @@ func _on_size_option_button_item_selected(index: int) -> void:
 			doom.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		1:
 			doom.stretch_mode = TextureRect.STRETCH_SCALE
+
+
+func _on_mouse_accel_h_slider_value_changed(value: float) -> void:
+	doom.mouse_acceleration = value
+
+
+func _on_wasd_check_box_toggled(button_pressed: bool) -> void:
+	doom.wasd_mode = button_pressed
+
+
+func _on_panel_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		doom.grab_focus()
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+	if event is InputEventKey:
+		if event.is_pressed() and event.physical_keycode == KEY_ESCAPE:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			doom.release_focus()
+
+
+func _on_doom_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		doom.grab_focus()
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+	if event is InputEventKey:
+		if event.is_pressed() and event.physical_keycode == KEY_ESCAPE:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			doom.release_focus()
+
+
+func _on_doom_focus_exited() -> void:
+	pass

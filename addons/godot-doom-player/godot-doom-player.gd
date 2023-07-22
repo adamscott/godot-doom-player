@@ -31,6 +31,9 @@ func _has_main_screen() -> bool:
 
 
 func _make_visible(visible: bool) -> void:
+	if not visible:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
 	if main_panel_instance != null:
 		main_panel_instance.visible = visible
 
