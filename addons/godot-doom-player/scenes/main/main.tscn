@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/godot-doom-player/scenes/main/main.gd" id="1_o4r0k"]
 
-[sub_resource type="ImageTexture" id="ImageTexture_d4rre"]
+[sub_resource type="ImageTexture" id="ImageTexture_lw5g1"]
 
 [node name="Main" type="MarginContainer"]
 anchors_preset = 15
@@ -72,14 +72,20 @@ layout_mode = 2
 button_pressed = true
 text = "WASD Mode"
 
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="WADOptionButton" type="OptionButton" parent="VBoxContainer/HBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="Panel" type="Panel" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 2
 
 [node name="DOOM" type="DOOM" parent="VBoxContainer/Panel"]
-assets_wad_path = "res://addons/godot-doom-player/resources/wad/DOOM1.WAD"
-assets_soundfont_path = "res://addons/godot-doom-player/resources/sf3/MuseScore_General.sf3"
 wasd_mode = true
 mouse_acceleration = 1.5
 autosave = true
@@ -92,7 +98,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 focus_mode = 2
-texture = SubResource("ImageTexture_d4rre")
+texture = SubResource("ImageTexture_lw5g1")
 stretch_mode = 5
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

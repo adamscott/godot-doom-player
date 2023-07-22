@@ -8,13 +8,18 @@ var editor_interface: EditorInterface  # Set in godot-doom-player.gd
 @onready var size_option_button: OptionButton = %SizeOptionButton
 @onready var mouse_accel_hslider: HSlider = %MouseAccelHSlider
 @onready var wasd_checkbox: CheckBox = %WASDCheckBox
+@onready var wad_option_button: OptionButton = %WADOptionButton
 
 const DOOM_MIN_WIDTH: = 320
 const DOOM_MIN_HEIGHT: = 240
 const MOUSE_ACCELERATION_SETTING: = "DOOM/settings/internal/mouse_acceleration"
 const WASD_MODE_SETTING: = "DOOM/settings/internal/wasd_mode"
+const WAD_PATH_SETTING: = "DOOM/settings/wad/wad_path_%d"
+const SOUNDFONT_SETTING: = "DOOM/settings/soundfont/soundfont_path"
+const WAD_ACTIVE_INDEX_SETTING: = "DOOM/settings/internal/active_wad_index"
 
 var assets_imported: = false
+var current_wad_index: = 1
 
 func _ready() -> void:
 	doom.assets_imported.connect(_on_doom_assets_imported)
@@ -26,6 +31,7 @@ func _ready() -> void:
 
 
 func update_settings() -> void:
+	# WASD_MODE_SETTING
 	if ProjectSettings.has_setting(WASD_MODE_SETTING):
 		wasd_checkbox.button_pressed = ProjectSettings.get(WASD_MODE_SETTING)
 	else:
@@ -33,12 +39,43 @@ func update_settings() -> void:
 		ProjectSettings.set_initial_value(WASD_MODE_SETTING, false)
 	ProjectSettings.set_as_internal(WASD_MODE_SETTING, true)
 
+	# MOUSE_ACCELERATION_SETTING
 	if ProjectSettings.has_setting(MOUSE_ACCELERATION_SETTING):
 		mouse_accel_hslider.value = ProjectSettings.get(MOUSE_ACCELERATION_SETTING)
 	else:
 		ProjectSettings.set_setting(MOUSE_ACCELERATION_SETTING, 1.5)
 		ProjectSettings.set_initial_value(MOUSE_ACCELERATION_SETTING, 1.5)
 	ProjectSettings.set_as_internal(MOUSE_ACCELERATION_SETTING, true)
+
+	# WAD_ACTIVE_INDEX_SETTING
+	if ProjectSettings.has_setting(WAD_ACTIVE_INDEX_SETTING):
+		current_wad_index = ProjectSettings.get(WAD_ACTIVE_INDEX_SETTING)
+	else:
+		ProjectSettings.set_setting(WAD_ACTIVE_INDEX_SETTING, 1)
+		ProjectSettings.set_initial_value(WAD_ACTIVE_INDEX_SETTING, 1)
+	ProjectSettings.set_as_internal(WAD_ACTIVE_INDEX_SETTING, true)
+
+	# WAD_PATH_SETTING
+	for i in range(1, 10):
+		var wad_path_setting: = WAD_PATH_SETTING % i
+		var has_setting_value: = ProjectSettings.has_setting(wad_path_setting)
+		if has_setting_value:
+			var setting_value: String = ProjectSettings.get(wad_path_setting)
+			if not setting_value.is_empty():
+				var wad_path: String = ProjectSettings.get(wad_path_setting)
+				wad_option_button.add_item("%d: %s" % [i, wad_path.get_file()], i)
+				if i == current_wad_index:
+					wad_option_button.selected = i
+
+	if wad_option_button.selected != current_wad_index and wad_option_button.selected >= 0:
+		current_wad_index = wad_option_button.selected
+	else:
+		wad_option_button.selected = current_wad_index
+
+	if ProjectSettings.has_setting(WAD_PATH_SETTING % current_wad_index):
+		doom.assets_wad_path = ProjectSettings.get(WAD_PATH_SETTING % current_wad_index)
+	if ProjectSettings.has_setting(SOUNDFONT_SETTING):
+		doom.assets_soundfont_path = ProjectSettings.get(SOUNDFONT_SETTING)
 
 	ProjectSettings.save()
 
@@ -85,7 +122,11 @@ func init_doom() -> void:
 		return
 
 	update_paths()
-	doom.import_assets()
+
+	if not doom.doom_assets_ready:
+		doom.import_assets()
+
+	doom.doom_enabled = true
 	doom.grab_focus()
 
 
