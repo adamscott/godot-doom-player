@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/godot-doom-player/scenes/main/main.gd" id="1_o4r0k"]
 
-[sub_resource type="ImageTexture" id="ImageTexture_ejicj"]
+[sub_resource type="ImageTexture" id="ImageTexture_d4rre"]
 
 [node name="Main" type="MarginContainer"]
 anchors_preset = 15
@@ -19,7 +19,7 @@ script = ExtResource("1_o4r0k")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -69,6 +69,7 @@ theme_override_constants/separation = 10
 [node name="WASDCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
+button_pressed = true
 text = "WASD Mode"
 
 [node name="Panel" type="Panel" parent="VBoxContainer"]
@@ -79,7 +80,9 @@ focus_mode = 2
 [node name="DOOM" type="DOOM" parent="VBoxContainer/Panel"]
 assets_wad_path = "res://addons/godot-doom-player/resources/wad/DOOM1.WAD"
 assets_soundfont_path = "res://addons/godot-doom-player/resources/sf3/MuseScore_General.sf3"
+wasd_mode = true
 mouse_acceleration = 1.5
+autosave = true
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -89,7 +92,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 focus_mode = 2
-texture = SubResource("ImageTexture_ejicj")
+texture = SubResource("ImageTexture_d4rre")
 stretch_mode = 5
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
