@@ -18,9 +18,9 @@ func _enter_tree() -> void:
 	get_editor_interface().get_editor_main_screen().add_child(main_panel_instance)
 	_make_visible(false)
 
-	project_settings_changed.connect(update_project_settings)
-
 	init_project_settings()
+
+	project_settings_changed.connect(update_project_settings)
 
 
 func _exit_tree() -> void:
@@ -87,8 +87,19 @@ func init_soundfont_settings() -> void:
 	ProjectSettings.add_property_info(soundfont_property_info)
 
 
+func connect_project_settings_changed() -> void:
+	project_settings_changed.connect(update_project_settings)
+
+
 func update_project_settings() -> void:
 	if main_panel_instance == null:
 		return
 
+	var signal_connected = project_settings_changed.is_connected(update_project_settings)
+	if signal_connected:
+		project_settings_changed.disconnect(update_project_settings)
+
 	main_panel_instance.update_settings()
+
+	if signal_connected:
+		connect_project_settings_changed.call_deferred()

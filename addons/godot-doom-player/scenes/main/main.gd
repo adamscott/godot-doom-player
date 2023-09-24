@@ -86,7 +86,6 @@ func _on_doom_assets_imported() -> void:
 
 	assets_imported = true
 	if visible:
-		print("doom enabled")
 		doom.doom_enabled = true
 
 
